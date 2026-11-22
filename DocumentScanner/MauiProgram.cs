@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
+using DocumentScanner.Interfaces;
+using DocumentScanner.Services;
 
 namespace DocumentScanner
 {
@@ -21,6 +23,7 @@ namespace DocumentScanner
             builder.Logging.AddDebug();
 #endif
 
+            builder.Services.AddSingleton<ICaptureService, MediaPickerCaptureService>();
             return builder.Build();
         }
     }

@@ -1,24 +1,29 @@
-﻿namespace DocumentScanner
+﻿using DocumentScanner.Interfaces;
+
+namespace DocumentScanner
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
-
         public MainPage()
         {
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
+        private async void OnCaptureClicked(object? sender, EventArgs e)
         {
-            count++;
+            var capture = IPlatformApplication.Current!
+                .Services.GetRequiredService<ICaptureService>();
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            var stream = await capture.CapturePageAsync();
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            if (stream is null)
+            {
+                await DisplayAlert("No page", "Capture was cancelled or isn't available.", "OK");
+                return;
+            }
+
+            // FromStream takes a factory because MAUI may re-read the stream.
+            PreviewImage.Source = ImageSource.FromStream(() => stream);
         }
     }
 }
