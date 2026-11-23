@@ -24,6 +24,7 @@ namespace DocumentScanner
 #endif
 
             builder.Services.AddSingleton<ICaptureService, MediaPickerCaptureService>();
+            builder.Services.AddSingleton<IDocumentStorage, FileDocumentStorage>();
             return builder.Build();
         }
     }
